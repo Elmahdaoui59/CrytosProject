@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">CryptoPrices</string>
+    <string name="empty_view_text">This is the empty view</string>
+    <string name="error_unable_to_reach_network">Unable to reach network\nVerify your internet connection and try again!</string>
+    <string name="ok_button_text">Ok</string>
+    <string name="error_dialog_title">Error Dialog</string>
+</resources>
