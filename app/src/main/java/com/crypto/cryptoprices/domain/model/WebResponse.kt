@@ -6,6 +6,6 @@ sealed class WebResponse<out T> {
         val data : T
     ): WebResponse<T>()
     data class Failure(
-        val e: Throwable
+        val message: String
     ): WebResponse<Nothing>()
 }

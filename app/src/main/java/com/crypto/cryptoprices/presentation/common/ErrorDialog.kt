@@ -13,7 +13,7 @@ import com.crypto.cryptoprices.R
 @Composable
 fun ErrorDialog(
     modifier: Modifier = Modifier,
-    messageId: Int,
+    message: String,
     onDismissError: () -> Unit
 ) {
     AlertDialog(
@@ -32,7 +32,7 @@ fun ErrorDialog(
             )
         },
         text = {
-            Text(text = stringResource(id = messageId), textAlign = TextAlign.Center)
+            Text(text = message, textAlign = TextAlign.Center)
         }
     )
 

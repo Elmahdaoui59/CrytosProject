@@ -1,14 +1,19 @@
+import org.jetbrains.kotlin.kapt3.base.Kapt.kapt
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("com.google.devtools.ksp").version("1.6.10-1.0.4")
+    kotlin("kapt")
+    id("com.google.dagger.hilt.android")
+    kotlin("plugin.serialization") version "1.8.21"
 }
-
 
 android {
     namespace = "com.crypto.cryptoprices"
     compileSdk = 33
 
+    android.buildFeatures.buildConfig = true
     defaultConfig {
         applicationId = "com.crypto.cryptoprices"
         minSdk = 24
@@ -20,6 +25,17 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+
+        buildConfigField(
+            "String",
+            "BASE_URL",
+            "\"wss://stream.binance.com:443/\""
+        )
+        buildConfigField(
+            "String",
+            "HOST_NAME",
+            "\"wss://stream.binance.com\""
+        )
     }
 
     buildTypes {
@@ -30,6 +46,9 @@ android {
                 "proguard-rules.pro"
             )
         }
+    }
+    productFlavors {
+
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
@@ -49,13 +68,12 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+
 }
 
 dependencies {
-
-    val scarletVersion = "0.1.12"
-
-    implementation("androidx.core:core-ktx:1.9.0")
+    val ktor_version = "2.3.0"
+    implementation("androidx.core:core-ktx:1.10.1")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.1")
     implementation("androidx.activity:activity-compose:1.7.1")
     implementation(platform("androidx.compose:compose-bom:2023.03.00"))
@@ -71,23 +89,26 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
 
+    // Compose dependencies
+    //implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.1")
+    //implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1")
+    implementation("androidx.hilt:hilt-navigation-compose:1.1.0-alpha01")
+    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.6.1")
     //okhttp
     implementation("com.squareup.okhttp3:okhttp:4.11.0")
     implementation("com.squareup.moshi:moshi-kotlin:1.14.0")
-    implementation("com.squareup.moshi:moshi:1.12.0")
-    //scarlet
-    implementation("com.tinder.scarlet:scarlet:$scarletVersion")
-    implementation("com.tinder.scarlet:scarlet-core:$scarletVersion")
-    implementation("com.tinder.scarlet:websocket-okhttp:$scarletVersion")
-    implementation("com.tinder.scarlet:stream-adapter-rxjava2:$scarletVersion")
-    implementation("com.tinder.scarlet:message-adapter-gson:$scarletVersion")
-    implementation("com.tinder.scarlet:message-adapter-moshi:$scarletVersion")
-    implementation("com.tinder.scarlet:stream-adapter-coroutines:$scarletVersion")
-    implementation("com.tinder.scarlet:lifecycle-android:$scarletVersion")
-    implementation("com.squareup.okhttp3:logging-interceptor:4.11.0")
-    implementation("com.google.code.gson:gson:2.10.1")
-    ksp("com.squareup.moshi:moshi-kotlin-codegen:1.14.0")
-    implementation("io.reactivex.rxjava2:rxjava:2.2.21")
-    implementation("io.reactivex.rxjava2:rxandroid:2.1.1")
-    implementation("io.reactivex.rxjava2:rxkotlin:2.4.0")
+    implementation("com.squareup.moshi:moshi:1.14.0")
+    // ktor websocket
+    implementation("io.ktor:ktor-client-core:$ktor_version")
+    implementation("io.ktor:ktor-client-websockets:$ktor_version")
+    implementation("io.ktor:ktor-client-cio:$ktor_version")
+    implementation("io.ktor:ktor-client-content-negotiation:$ktor_version")
+    implementation("io.ktor:ktor-serialization-kotlinx-json:$ktor_version")
+    //dagger hilt
+    implementation("com.google.dagger:hilt-android:2.44")
+    kapt("com.google.dagger:hilt-android-compiler:2.44")
+
+}
+kapt {
+    correctErrorTypes = true
 }
