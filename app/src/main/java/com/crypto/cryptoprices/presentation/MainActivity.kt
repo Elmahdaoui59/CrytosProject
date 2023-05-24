@@ -39,7 +39,6 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     SetupNavGraph(navController = navController)
-
                 }
             }
         }

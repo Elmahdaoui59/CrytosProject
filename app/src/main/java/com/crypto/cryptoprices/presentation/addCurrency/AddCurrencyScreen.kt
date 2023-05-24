@@ -1,7 +1,8 @@
 package com.crypto.cryptoprices.presentation.addCurrency
 
+import android.content.Context
+import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -27,21 +28,27 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.crypto.cryptoprices.domain.model.CurrencyItem
+import com.crypto.cryptoprices.presentation.common.Constants
 import com.crypto.cryptoprices.presentation.common.ErrorAndLoadingScreen
+import com.crypto.cryptoprices.presentation.navigation.Screen
+import com.crypto.cryptoprices.saveSelectedCurrenciesToSharedPrefs
 
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun AddCurrencyScreen(
+    navController: NavController,
     modifier: Modifier = Modifier,
     state: AddCurrUiState,
     onSearchQueryChanged: (String) -> Unit,
+    onClearSelection: () -> Unit,
     onCurrencySelectionChange: (CurrencyItem, Boolean) -> Unit,
     onDismissError: () -> Unit
 ) {
@@ -53,13 +60,14 @@ fun AddCurrencyScreen(
     ) {
         val keyboardController = LocalSoftwareKeyboardController.current
         val focusManager = LocalFocusManager.current
+        val ctx = LocalContext.current
         AnimatedVisibility(visible = state.currenciesList.any { it.isSelected }) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 IconButton(
-                    onClick = { /*TODO*/ }
+                    onClick = { onClearSelection() }
                 ) {
                     Column {
                         Icon(
@@ -74,7 +82,13 @@ fun AddCurrencyScreen(
                     }
                 }
                 IconButton(
-                    onClick = { /*TODO*/ }
+                    onClick = {
+                        saveSelectedCurrenciesToSharedPrefs(
+                            ctx,
+                            list = state.currenciesList
+                        )
+                        navController.navigate(Screen.MainScreen.route)
+                    }
                 ) {
                     Column {
                         Icon(
@@ -115,7 +129,7 @@ fun AddCurrencyScreen(
             contentPadding = PaddingValues(vertical = 10.dp)
         ) {
             items(state.currenciesList) { curr ->
-                CurrencyItem(currencyItem = curr) { isSelected ->
+                CurrencyLayoutItem(currencyItem = curr) { isSelected ->
                     onCurrencySelectionChange(curr, isSelected)
                 }
             }

@@ -1,5 +1,6 @@
 package com.crypto.cryptoprices.presentation.addCurrency
 
+import android.content.SharedPreferences
 import androidx.compose.runtime.toMutableStateList
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -80,14 +81,23 @@ class AddCurrencyViewModel @Inject constructor(
             is AddCurrUiEvent.CurrencySelectionChange -> {
                 currencySelectionChange(event.curr, event.isSelected)
             }
+
+            is AddCurrUiEvent.ClearSelection -> {
+                _addCurrUiState.update {
+                    it.copy(
+                        currenciesList = addCurrUiState.value.currenciesList.map { item ->
+                            item.copy(isSelected = false)
+                        }.toMutableStateList()
+                    )
+                }
+            }
         }
     }
 
     private fun currencySelectionChange(curr: CurrencyItem, isSelected: Boolean) {
         val tmpList = addCurrUiState.value.currenciesList.map {
             if (it.symbol == curr.symbol) {
-                it.isSelected = isSelected
-                it
+                it.copy(isSelected = isSelected)
             } else {
                 it
             }

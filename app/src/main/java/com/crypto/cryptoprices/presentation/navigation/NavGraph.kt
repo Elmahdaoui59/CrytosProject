@@ -40,6 +40,9 @@ fun SetupNavGraph(
                     tickerInfoViewModel.handleEvent(TickerInfoEvent.CloseStream)
                 },
                 navController = navController,
+                onUpdateStream = {
+                    tickerInfoViewModel.handleEvent(TickerInfoEvent.UpdateStreamsList(it))
+                },
                 onDismissError = {
                     tickerInfoViewModel.handleEvent(TickerInfoEvent.DismissError)
                 }
@@ -51,11 +54,15 @@ fun SetupNavGraph(
             val addCurrenciesViewModel: AddCurrencyViewModel = hiltViewModel()
             val state: AddCurrUiState =
                 addCurrenciesViewModel.addCurrUiState.collectAsStateWithLifecycle().value
-            AddCurrencyScreen(state = state, onSearchQueryChanged = {
+            AddCurrencyScreen(
+                navController = navController,
+                state = state,
+                onSearchQueryChanged = {
                 addCurrenciesViewModel.handleEvent(
                     AddCurrUiEvent.SearchQueryChanged(it)
                 )
             },
+                onClearSelection = { addCurrenciesViewModel.handleEvent(AddCurrUiEvent.ClearSelection) },
                 onCurrencySelectionChange = { curr, isSelected ->
                     addCurrenciesViewModel.handleEvent(
                         AddCurrUiEvent.CurrencySelectionChange(

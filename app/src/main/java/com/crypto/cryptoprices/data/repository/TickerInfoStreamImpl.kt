@@ -36,9 +36,12 @@ class TickerInfoStreamImpl(private val client: HttpClient) : TickerInfoStream {
         try {
             var url = BuildConfig.BASE_URL + "stream?streams="
             for (stream in streams) {
-                url += "$stream/"
+                if(stream.isNotBlank()) {
+                    url += "$stream/"
+                }
             }
             url = url.dropLast(1)
+            Log.i("url", url)
             client.webSocket(url) {
                 session = this
                 while (client != null) {

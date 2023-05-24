@@ -1,5 +1,7 @@
 package com.crypto.cryptoprices.presentation.currencies
 
+import android.util.Log
+import androidx.compose.ui.text.toLowerCase
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.crypto.cryptoprices.domain.model.Ticker
@@ -16,15 +18,8 @@ import javax.inject.Inject
 @HiltViewModel
 class TickerInfoViewModel @Inject constructor(
     private val tickerInfoRepo: TickerInfoStream,
-    private val getCurrenciesRepo: GetCurrenciesRepo
 ) : ViewModel() {
-    private val streamsNamesList = mutableListOf(
-        "btcusdt@ticker", "sandusdt@ticker", "ethusdt@ticker", "ltcusdt@ticker", "bnbusdt@ticker",
-        "eosusdt@ticker", "xrpusdt@ticker", "adausdt@ticker", "qtumusdt@ticker", "neousdt@ticker",
-        "rlcbnb@ticker", "rlceth@ticker", "insbtc@ticker", "pivxbtc@ticker", "pivxbnb@ticker",
-        "iosbtc@ticker", "ioseth@ticker", "chatbtc@ticker", "chateth@ticker", "steembtc@ticker",
-        "steemeth@ticker", "steembnb@ticker", "nanobtc@ticker", "nanoeth@ticker", "nanobnb@ticker",
-    )
+    private val streamsNamesList = mutableListOf("")
     private val tickersList: MutableList<Ticker> = emptyList<Ticker>().toMutableList()
 
     private val _uiState: MutableStateFlow<TickerInfoUiState> = MutableStateFlow(TickerInfoUiState())
@@ -33,11 +28,10 @@ class TickerInfoViewModel @Inject constructor(
     private val _tickers = MutableStateFlow(tickersList)
     val tickers = _tickers.asStateFlow()
     init {
-        for (s in streamsNamesList) {
-            tickersList.add(Ticker(null, s))
-        }
+
         //getTickerInfo()
     }
+
     fun getTickerInfo() {
         viewModelScope.launch {
             tickerInfoRepo.getTickerInfo(streamsNamesList).collect { result ->
@@ -106,9 +100,15 @@ class TickerInfoViewModel @Inject constructor(
                     }
                 }
             }
-
             is TickerInfoEvent.DismissError -> {
                 dismissError()
+            }
+            is TickerInfoEvent.UpdateStreamsList -> {
+                event.symbols.forEach {
+                    streamsNamesList.add("${it.lowercase()}@ticker")
+                }
+                updateTickersList()
+                getTickerInfo()
             }
         }
     }
@@ -127,6 +127,11 @@ class TickerInfoViewModel @Inject constructor(
                 isLoading = true,
                 error = null
             )
+        }
+    }
+    private fun updateTickersList() {
+        for (s in streamsNamesList) {
+            tickersList.add(Ticker(null, s))
         }
     }
 }
