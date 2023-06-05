@@ -1,5 +1,6 @@
 package com.crypto.cryptoprices.presentation.addCurrency
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -13,14 +14,17 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -34,7 +38,6 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.crypto.cryptoprices.domain.model.CurrencyItem
 import com.crypto.cryptoprices.presentation.common.ErrorAndLoadingScreen
-import com.crypto.cryptoprices.presentation.navigation.Screen
 import com.crypto.cryptoprices.saveSelectedCurrenciesToSharedPrefs
 
 
@@ -49,85 +52,100 @@ fun AddCurrencyScreen(
     onCurrencySelectionChange: (CurrencyItem, Boolean) -> Unit,
     onDismissError: () -> Unit
 ) {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = modifier
-            .padding(10.dp)
-            .fillMaxSize()
-    ) {
-        val keyboardController = LocalSoftwareKeyboardController.current
-        val focusManager = LocalFocusManager.current
-        val ctx = LocalContext.current
-        AnimatedVisibility(visible = state.currenciesList.any { it.isSelected }) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly
-            ) {
-                IconButton(
-                    onClick = { onClearSelection() }
+    BackHandler(true) {
+        navController.popBackStack()
+    }
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = {},
+                navigationIcon = { IconButton(onClick = { navController.popBackStack() }) {
+                    Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "")
+                }}
+            )
+        }
+    ) { paddingValues ->
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = modifier
+                .padding(paddingValues)
+                .fillMaxSize()
+        ) {
+            val keyboardController = LocalSoftwareKeyboardController.current
+            val focusManager = LocalFocusManager.current
+            val ctx = LocalContext.current
+            AnimatedVisibility(visible = state.currenciesList.any { it.isSelected }) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
-                    Column {
-                        Icon(
-                            imageVector = Icons.Default.Clear,
-                            contentDescription = ""
-                        )
-                        Text(
-                            text = "Clear",
-                            maxLines = 1,
-                            style = MaterialTheme.typography.labelSmall
-                        )
+                    IconButton(
+                        onClick = { onClearSelection() }
+                    ) {
+                        Column {
+                            Icon(
+                                imageVector = Icons.Default.Clear,
+                                contentDescription = ""
+                            )
+                            Text(
+                                text = "Clear",
+                                maxLines = 1,
+                                style = MaterialTheme.typography.labelSmall
+                            )
+                        }
                     }
-                }
-                IconButton(
-                    onClick = {
-                        saveSelectedCurrenciesToSharedPrefs(
-                            ctx,
-                            list = state.currenciesList
-                        )
-                        navController.navigate(Screen.MainScreen.route)
-                    }
-                ) {
-                    Column {
-                        Icon(
-                            imageVector = Icons.Default.Done,
-                            contentDescription = "",
-                            tint = Color.Green,
-                        )
-                        Text(
-                            text = "Add",
-                            maxLines = 1,
-                            style = MaterialTheme.typography.labelSmall
-                        )
+                    IconButton(
+                        onClick = {
+                            saveSelectedCurrenciesToSharedPrefs(
+                                ctx,
+                                list = state.currenciesList
+                            )
+                            //navController.navigate(Screen.MainScreen.route)
+                            navController.popBackStack()
+                        }
+                    ) {
+                        Column {
+                            Icon(
+                                imageVector = Icons.Default.Done,
+                                contentDescription = "",
+                                tint = Color.Green,
+                            )
+                            Text(
+                                text = "Add",
+                                maxLines = 1,
+                                style = MaterialTheme.typography.labelSmall
+                            )
+                        }
                     }
                 }
             }
-        }
-        TextField(
-            modifier = Modifier.fillMaxWidth(),
-            value = state.searchQuery ?: "",
-            onValueChange = {
-                onSearchQueryChanged(it.trim())
-            },
-            placeholder = { Text(text = "Search") },
-            singleLine = true,
-            keyboardOptions = KeyboardOptions.Default.copy(
-                imeAction = ImeAction.Search
-            ),
-            keyboardActions = KeyboardActions(
-                onSearch = {
-                    keyboardController?.hide()
-                    focusManager.clearFocus()
-                }
+            TextField(
+                modifier = Modifier.fillMaxWidth(),
+                value = state.searchQuery ?: "",
+                onValueChange = {
+                    onSearchQueryChanged(it.trim())
+                },
+                placeholder = { Text(text = "Search") },
+                singleLine = true,
+                keyboardOptions = KeyboardOptions.Default.copy(
+                    imeAction = ImeAction.Search
+                ),
+                keyboardActions = KeyboardActions(
+                    onSearch = {
+                        keyboardController?.hide()
+                        focusManager.clearFocus()
+                    }
+                )
             )
-        )
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize(),
-            contentPadding = PaddingValues(vertical = 10.dp)
-        ) {
-            items(state.currenciesList) { curr ->
-                CurrencyLayoutItem(currencyItem = curr) { isSelected ->
-                    onCurrencySelectionChange(curr, isSelected)
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize(),
+                contentPadding = PaddingValues(vertical = 10.dp)
+            ) {
+                items(state.currenciesList) { curr ->
+                    CurrencyLayoutItem(currencyItem = curr) { isSelected ->
+                        onCurrencySelectionChange(curr, isSelected)
+                    }
                 }
             }
         }

@@ -8,7 +8,6 @@ import android.util.Log
 import android.widget.RemoteViews
 import android.widget.RemoteViewsService
 import android.widget.Toast
-import androidx.compose.ui.text.toLowerCase
 import com.crypto.cryptoprices.R
 import com.crypto.cryptoprices.domain.model.WebResponse
 import com.crypto.cryptoprices.domain.repository.TickerInfoStream
@@ -17,10 +16,8 @@ import com.crypto.cryptoprices.presentation.common.Constants
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import okhttp3.internal.wait
 
 
 class ListRemoteViewsFactory(
@@ -88,6 +85,8 @@ class ListRemoteViewsFactory(
                         Log.i("widget stream", "symbol: $symbol, price: $price")
                         appWidgetManager.notifyAppWidgetViewDataChanged(widgetIds, R.id.list_view)
                     }
+
+                    else -> {}
                 }
             }
         }

@@ -49,7 +49,7 @@ fun TickersList(
             contentAlignment = Alignment.Center
         ) {
             Text(
-                text = "No currency!\n Add currencies to show them here",
+                text = "No currencies!\n Add currencies to display them here and in the widget.",
                 textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.labelMedium,
                 color = Color.DarkGray

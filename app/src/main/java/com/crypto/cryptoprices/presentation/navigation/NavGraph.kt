@@ -18,7 +18,8 @@ import com.crypto.cryptoprices.presentation.currencies.components.MainScreen
 
 @Composable
 fun SetupNavGraph(
-    navController: NavHostController
+    navController: NavHostController,
+    tickerInfoViewModel: TickerInfoViewModel
 ) {
     NavHost(
         navController = navController,
@@ -27,8 +28,6 @@ fun SetupNavGraph(
         composable(
             route = Screen.MainScreen.route
         ) {
-
-            val tickerInfoViewModel: TickerInfoViewModel = hiltViewModel()
             val tickers = tickerInfoViewModel.tickers.collectAsStateWithLifecycle().value
             val state: TickerInfoUiState =
                 tickerInfoViewModel.uiState.collectAsStateWithLifecycle().value
@@ -36,13 +35,7 @@ fun SetupNavGraph(
                 tickers = tickers,
                 state = state,
                 onGetTickerInfo = tickerInfoViewModel::getTickersInfo,
-                onCloseStream = {
-                    tickerInfoViewModel.handleEvent(TickerInfoEvent.CloseStream)
-                },
                 navController = navController,
-                onUpdateStream = {
-                    tickerInfoViewModel.handleEvent(TickerInfoEvent.UpdateStreamsList(it))
-                },
                 onDismissError = {
                     tickerInfoViewModel.handleEvent(TickerInfoEvent.DismissError)
                 }

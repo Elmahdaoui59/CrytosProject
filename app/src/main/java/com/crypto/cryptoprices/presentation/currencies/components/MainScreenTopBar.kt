@@ -2,7 +2,6 @@ package com.crypto.cryptoprices.presentation.currencies.components
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.DropdownMenu
@@ -35,25 +34,23 @@ fun MainScreenTopBar(
     TopAppBar(
         title = { Text(text = "Real time Prices") },
         actions = {
+            IconButton(
+                onClick = {
+                    navController.navigate(Screen.AddCurrencyScreen.route)
+                    mDisplayMenu = false
+
+                }
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Add,
+                    contentDescription = "add currency menu icon"
+                )
+            }
             IconButton(onClick = { mDisplayMenu = !mDisplayMenu }) {
                 Icon(imageVector = Icons.Default.MoreVert, contentDescription = "menu icon")
             }
             DropdownMenu(expanded = mDisplayMenu, onDismissRequest = { mDisplayMenu = false }) {
-                DropdownMenuItem(
-                    text = { Text(text = "Add currencies") },
-                    onClick = {
-                        navController.navigate(Screen.AddCurrencyScreen.route)
-                        mDisplayMenu = false
-                    },
-                    leadingIcon = {
-                        Icon(
-                            imageVector = Icons.Default.Add,
-                            contentDescription = "add currency menu icon"
-                        )
-                    },
-                    enabled = navController.currentDestination?.route != Screen.AddCurrencyScreen.route
-                )
-                DropdownMenuItem(
+               DropdownMenuItem(
                     text = { Text(text = "Clear Currencies") },
                     onClick = {
                         clearCurrenciesFromSharedPref(ctx)
