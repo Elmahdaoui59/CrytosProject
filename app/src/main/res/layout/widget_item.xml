@@ -1,10 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/widget_item"
-    android:layout_width="120dp"
-    android:layout_height="120dp"
-    android:gravity="center"
+    android:layout_width="match_parent"
     android:background="@drawable/widget_item_background"
-    android:textColor="#ffffff"
-    android:textStyle="bold"
-    android:textSize="44sp" />
+    android:weightSum="1"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/widget_item_symbol"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.5"
+        android:textColor="#E37676"
+        android:textAllCaps="true"
+        android:singleLine="true"
+        style="@style/WidgetTextViewStyle"
+        android:text="ticker"/>
+    <TextView
+        android:id="@+id/widget_item_price"
+        android:layout_width="0dp"
+        android:layout_height="20dp"
+        android:layout_weight="0.5"
+        android:singleLine="true"
+        android:textColor="#ffffff"
+        style="@style/WidgetTextViewStyle"
+        />
+</LinearLayout>

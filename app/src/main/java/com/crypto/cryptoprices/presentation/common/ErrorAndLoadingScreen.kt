@@ -1,12 +1,14 @@
 package com.crypto.cryptoprices.presentation.common
 
 import android.app.AlertDialog
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import com.crypto.cryptoprices.presentation.currencies.TickerInfoEvent
 import java.lang.Error
 
@@ -22,7 +24,7 @@ fun ErrorAndLoadingScreen(
         }
     }
     Box(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier.fillMaxSize().background(color = Color.Transparent),
         contentAlignment = Alignment.Center
     ) {
         if (isLoading) {

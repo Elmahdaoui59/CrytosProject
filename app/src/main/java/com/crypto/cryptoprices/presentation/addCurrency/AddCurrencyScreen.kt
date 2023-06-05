@@ -1,7 +1,5 @@
 package com.crypto.cryptoprices.presentation.addCurrency
 
-import android.content.Context
-import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -35,7 +33,6 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.crypto.cryptoprices.domain.model.CurrencyItem
-import com.crypto.cryptoprices.presentation.common.Constants
 import com.crypto.cryptoprices.presentation.common.ErrorAndLoadingScreen
 import com.crypto.cryptoprices.presentation.navigation.Screen
 import com.crypto.cryptoprices.saveSelectedCurrenciesToSharedPrefs

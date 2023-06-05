@@ -17,17 +17,14 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.unit.dp
+import androidx.core.content.edit
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleObserver
 import androidx.navigation.NavController
 import com.crypto.cryptoprices.domain.model.Ticker
 import com.crypto.cryptoprices.presentation.common.Constants
 import com.crypto.cryptoprices.presentation.common.ErrorAndLoadingScreen
-import com.crypto.cryptoprices.presentation.currencies.TickerInfoEvent
 import com.crypto.cryptoprices.presentation.currencies.TickerInfoUiState
-import com.crypto.cryptoprices.presentation.currencies.TickerInfoViewModel
 import com.crypto.cryptoprices.presentation.currencies.TickersList
 
 
@@ -45,7 +42,7 @@ fun MainScreen(
 ) {
 
     val ctx = LocalContext.current
-    LaunchedEffect(key1 = Lifecycle.Event.ON_START) {
+    fun refreshStreamsListFromSharedPrefs() {
         val sharedPrefs = ctx
             .getSharedPreferences(
                 Constants.SELECTED_CURRENCIES_SHARED_PREF,
@@ -58,6 +55,30 @@ fun MainScreen(
             )
         }
     }
+
+    fun deleteTickerFromSharedPrefs(symbol: String) {
+        val sharedPrefs = ctx
+            .getSharedPreferences(
+                Constants.SELECTED_CURRENCIES_SHARED_PREF,
+                Context.MODE_PRIVATE
+            )
+        val oldSet =
+            sharedPrefs.getStringSet(Constants.SELECTED_CURRENCIES_LIST, emptySet())
+        oldSet?.removeIf {
+            it.trim().equals(symbol.trim(), ignoreCase = true)
+        }
+        oldSet?.let {
+            Log.i("newList", symbol + it.toString())
+            sharedPrefs.edit {
+                clear()
+                commit()
+                putStringSet(Constants.SELECTED_CURRENCIES_LIST, it.toSet())
+                commit()
+            }
+            refreshStreamsListFromSharedPrefs()
+        }
+    }
+
     Scaffold(
         topBar = {
             MainScreenTopBar(navController)
@@ -75,18 +96,27 @@ fun MainScreen(
                     .padding(10.dp)
                     .fillMaxSize()
             ) {
-                Button(onClick = { onGetTickerInfo() }) {
-                    Text(text = "open Stream")
-                }
+
                 Spacer(modifier = Modifier.height(20.dp))
                 Button(onClick = { onCloseStream() }) {
                     Text(text = "close stream")
                 }
-                TickersList(tickers)
+                TickersList(
+                    tickers,
+                    isLoading = state.isLoading,
+                    onRefresh = { onGetTickerInfo() },
+                    onDeleteTicker = {
+                        deleteTickerFromSharedPrefs(it)
+                    })
             }
         }
     }
-    ErrorAndLoadingScreen(error = state.error, isLoading = state.isLoading) {
+    ErrorAndLoadingScreen(error = state.error, isLoading = false) {
         onDismissError()
     }
+    LaunchedEffect(key1 = Lifecycle.Event.ON_START) {
+        refreshStreamsListFromSharedPrefs()
+    }
+
 }
+

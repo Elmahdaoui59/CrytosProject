@@ -1,5 +1,6 @@
 package com.crypto.cryptoprices.presentation.common
 
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -28,11 +29,12 @@ fun ErrorDialog(
             Text(
                 text = stringResource(id = R.string.error_dialog_title),
                 fontSize = 18.sp,
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
+                modifier = modifier.fillMaxWidth()
             )
         },
         text = {
-            Text(text = message, textAlign = TextAlign.Center)
+            Text(text = message, textAlign = TextAlign.Center, modifier = modifier.fillMaxWidth())
         }
     )
 

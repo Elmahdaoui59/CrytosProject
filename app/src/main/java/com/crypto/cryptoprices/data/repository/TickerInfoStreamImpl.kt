@@ -28,33 +28,36 @@ import okhttp3.WebSocketListener
 import okio.ByteString
 
 class TickerInfoStreamImpl(private val client: HttpClient) : TickerInfoStream {
-    private var flow: ProducerScope<WebResponse<Ticker>>? = null
     override fun getTickerInfo(streams: List<String>): Flow<WebResponse<Ticker>> = callbackFlow {
-        trySend(WebResponse.Loading)
         var session: DefaultClientWebSocketSession? = null
-        flow = this
-        try {
-            var url = BuildConfig.BASE_URL + "stream?streams="
-            for (stream in streams) {
-                if(stream.isNotBlank()) {
-                    url += "$stream/"
-                }
-            }
-            url = url.dropLast(1)
-            Log.i("url", url)
-            client.webSocket(url) {
-                session = this
-                while (client != null) {
-                    val message = incoming.receive() as? Frame.Text
-                    val ticker = message?.readText()?.getTickerFromJson()
-                    ticker?.let { Log.i("socket", it.toString()) }
-                    ticker?.let {
-                        trySend(WebResponse.Success(it))
+        if (streams.isNotEmpty()) {
+            trySend(WebResponse.Loading)
+            try {
+                var url = BuildConfig.BASE_URL + "stream?streams="
+                for (stream in streams) {
+                    if (stream.isNotBlank()) {
+                        url += "$stream/"
                     }
                 }
+                if (url.last() == '/')
+                    url = url.dropLast(1)
+                Log.i("url", url)
+                client.webSocket(url) {
+                    session = this
+
+                    while (client != null) {
+                        val message = incoming.receive() as? Frame.Text
+                        val ticker = message?.readText()?.getTickerFromJson()
+                        //ticker?.let { Log.i("socket", it.toString()) }
+                        ticker?.let {
+                            trySend(WebResponse.Success(it))
+                        }
+                    }
+                }
+            } catch (t: Throwable) {
+                Log.i("steam connection", t.message.toString())
+                trySend(WebResponse.Failure("Unable to establish connection\n Verify your internet and try again."))
             }
-        } catch (t: Throwable) {
-            trySend(WebResponse.Failure("Unable to establish connection"))
         }
         awaitClose {
             this.launch {
@@ -63,10 +66,8 @@ class TickerInfoStreamImpl(private val client: HttpClient) : TickerInfoStream {
             session = null
         }
     }
+
     override fun closeStream(): Flow<WebResponse<String>> = flow {
-        emit(WebResponse.Loading)
-        flow?.close()
-        emit(WebResponse.Success(""))
     }
 
 }

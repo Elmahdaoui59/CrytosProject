@@ -1,14 +1,21 @@
 package com.crypto.cryptoprices
 
+import android.appwidget.AppWidgetManager
+import android.appwidget.AppWidgetManager.ACTION_APPWIDGET_UPDATE
+import android.content.ComponentName
 import android.content.Context
+import android.content.Intent
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.platform.LocalContext
 import com.crypto.cryptoprices.domain.model.CurrencyItem
 import com.crypto.cryptoprices.domain.model.Ticker
 import com.crypto.cryptoprices.presentation.common.Constants
+import com.crypto.cryptoprices.presentation.listwidget.ListWidgetProvider
+import com.crypto.cryptoprices.presentation.listwidget.ListWidgetService
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
+import dagger.hilt.android.qualifiers.ApplicationContext
 import java.text.DecimalFormat
 
 fun String.formatPrice(): String {
@@ -51,4 +58,17 @@ fun saveSelectedCurrenciesToSharedPrefs(
         newSet + (oldSet ?: emptySet<String>())
     )
     editor.apply()
+}
+
+fun clearCurrenciesFromSharedPref(
+    ctx: Context
+) {
+    val sharedPrefs = ctx
+        .getSharedPreferences(
+            Constants.SELECTED_CURRENCIES_SHARED_PREF,
+            Context.MODE_PRIVATE
+        )
+    val editor = sharedPrefs.edit()
+    editor.clear()
+    editor.commit()
 }

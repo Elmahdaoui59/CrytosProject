@@ -35,7 +35,7 @@ fun SetupNavGraph(
             MainScreen(
                 tickers = tickers,
                 state = state,
-                onGetTickerInfo = tickerInfoViewModel::getTickerInfo,
+                onGetTickerInfo = tickerInfoViewModel::getTickersInfo,
                 onCloseStream = {
                     tickerInfoViewModel.handleEvent(TickerInfoEvent.CloseStream)
                 },
@@ -58,10 +58,10 @@ fun SetupNavGraph(
                 navController = navController,
                 state = state,
                 onSearchQueryChanged = {
-                addCurrenciesViewModel.handleEvent(
-                    AddCurrUiEvent.SearchQueryChanged(it)
-                )
-            },
+                    addCurrenciesViewModel.handleEvent(
+                        AddCurrUiEvent.SearchQueryChanged(it)
+                    )
+                },
                 onClearSelection = { addCurrenciesViewModel.handleEvent(AddCurrUiEvent.ClearSelection) },
                 onCurrencySelectionChange = { curr, isSelected ->
                     addCurrenciesViewModel.handleEvent(
