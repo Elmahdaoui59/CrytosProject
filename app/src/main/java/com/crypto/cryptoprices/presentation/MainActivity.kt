@@ -17,6 +17,7 @@ import com.crypto.cryptoprices.presentation.currencies.TickerInfoEvent
 import com.crypto.cryptoprices.presentation.currencies.TickerInfoViewModel
 import com.crypto.cryptoprices.presentation.navigation.SetupNavGraph
 import com.crypto.cryptoprices.presentation.ui.theme.CryptoPricesTheme
+import com.google.android.gms.ads.MobileAds
 import dagger.hilt.android.AndroidEntryPoint
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -53,6 +54,7 @@ class MainActivity : ComponentActivity(), SharedPreferences.OnSharedPreferenceCh
                 refreshStreamsListFromSharedPrefs()
             }
         }
+        MobileAds.initialize(this)
     }
 
     private fun refreshStreamsListFromSharedPrefs() {

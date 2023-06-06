@@ -38,6 +38,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.crypto.cryptoprices.domain.model.CurrencyItem
 import com.crypto.cryptoprices.presentation.common.ErrorAndLoadingScreen
+import com.crypto.cryptoprices.presentation.currencies.components.BannerAdView
 import com.crypto.cryptoprices.saveSelectedCurrenciesToSharedPrefs
 
 
@@ -137,6 +138,7 @@ fun AddCurrencyScreen(
                     }
                 )
             )
+            BannerAdView()
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize(),

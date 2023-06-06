@@ -38,6 +38,9 @@
             android:permission="android.permission.BIND_REMOTEVIEWS">
 
         </service>
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-7421319184995145~9705812394"/>
     </application>
 
 </manifest>

@@ -113,6 +113,8 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:32.1.0"))
     implementation("com.google.firebase:firebase-crashlytics-ktx")
     implementation("com.google.firebase:firebase-analytics-ktx")
+    //play services
+    implementation("com.google.android.gms:play-services-ads:22.1.0")
 }
 kapt {
     correctErrorTypes = true

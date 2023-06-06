@@ -74,7 +74,7 @@ fun MainScreen(
                     .padding(10.dp)
                     .fillMaxSize()
             ) {
-
+                BannerAdView()
                 Spacer(modifier = Modifier.height(20.dp))
                 TickersList(
                     tickers,
