@@ -126,7 +126,7 @@ fun AddCurrencyScreen(
                 onValueChange = {
                     onSearchQueryChanged(it.trim())
                 },
-                placeholder = { Text(text = "Search") },
+                placeholder = { Text(text = "ex. btcusdt") },
                 singleLine = true,
                 keyboardOptions = KeyboardOptions.Default.copy(
                     imeAction = ImeAction.Search
@@ -136,7 +136,8 @@ fun AddCurrencyScreen(
                         keyboardController?.hide()
                         focusManager.clearFocus()
                     }
-                )
+                ),
+                label = { Text(text = "Search")}
             )
             BannerAdView()
             LazyColumn(

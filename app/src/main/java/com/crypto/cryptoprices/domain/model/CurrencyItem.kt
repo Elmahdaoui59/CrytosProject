@@ -8,3 +8,5 @@ data class CurrencyItem(
     val symbol: String,
     var isSelected: Boolean = false
 )
+
+

@@ -1,23 +1,23 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
-    id("com.google.devtools.ksp").version("1.6.10-1.0.4")
-    kotlin("kapt")
+    id("com.google.devtools.ksp")
     id("com.google.dagger.hilt.android")
-    kotlin("plugin.serialization") version "1.8.21"
+    kotlin("plugin.serialization") version "2.0.21"
     id("com.google.gms.google-services")
     id("com.google.firebase.crashlytics")
+    id("org.jetbrains.kotlin.plugin.compose")
 }
 
 android {
     namespace = "com.crypto.cryptoprices"
-    compileSdk = 33
+    compileSdk = 34
 
     android.buildFeatures.buildConfig = true
     defaultConfig {
         applicationId = "com.crypto.cryptoprices"
         minSdk = 24
-        targetSdk = 33
+        targetSdk = 34
         versionCode = 1
         versionName = "1.0"
 
@@ -25,7 +25,6 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
-
         buildConfigField(
             "String",
             "BASE_URL",
@@ -38,30 +37,36 @@ android {
         )
     }
 
+    signingConfigs {
+        create("release") {
+            keyAlias = "key0"
+            keyPassword = "cryptodev"
+            storeFile = file("../keystore/cryptopricekey0.jks")
+            storePassword = "cryptodev"
+        }
+    }
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            signingConfig = signingConfigs.getByName("release")
         }
     }
     productFlavors {
 
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_18
-        targetCompatibility = JavaVersion.VERSION_18
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = "18"
+        jvmTarget = "17"
     }
     buildFeatures {
         compose = true
-    }
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.4.3"
     }
     packaging {
         resources {
@@ -72,7 +77,7 @@ android {
 }
 
 dependencies {
-    val ktor_version = "2.3.0"
+    val ktor_version = "3.0.1"
     implementation("androidx.core:core-ktx:1.10.1")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.1")
     implementation("androidx.activity:activity-compose:1.7.1")
@@ -93,12 +98,12 @@ dependencies {
     //implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.1")
     implementation("com.google.accompanist:accompanist-swiperefresh:0.27.0")
     //implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1")
-    implementation("androidx.hilt:hilt-navigation-compose:1.1.0-alpha01")
+    implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
     implementation("androidx.lifecycle:lifecycle-runtime-compose:2.6.1")
     //okhttp
-    implementation("com.squareup.okhttp3:okhttp:4.11.0")
-    implementation("com.squareup.moshi:moshi-kotlin:1.14.0")
-    implementation("com.squareup.moshi:moshi:1.14.0")
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")
+    implementation("com.squareup.moshi:moshi-kotlin:1.15.1")
+    implementation("com.squareup.moshi:moshi:1.15.1")
     // ktor websocket
     implementation("io.ktor:ktor-client-core:$ktor_version")
     implementation("io.ktor:ktor-client-websockets:$ktor_version")
@@ -106,8 +111,8 @@ dependencies {
     implementation("io.ktor:ktor-client-content-negotiation:$ktor_version")
     implementation("io.ktor:ktor-serialization-kotlinx-json:$ktor_version")
     //dagger hilt
-    implementation("com.google.dagger:hilt-android:2.44")
-    kapt("com.google.dagger:hilt-android-compiler:2.44")
+    implementation("com.google.dagger:hilt-android:2.52")
+    ksp("com.google.dagger:hilt-android-compiler:2.52")
 
     //firebase
     implementation(platform("com.google.firebase:firebase-bom:32.1.0"))
@@ -115,7 +120,4 @@ dependencies {
     implementation("com.google.firebase:firebase-analytics-ktx")
     //play services
     implementation("com.google.android.gms:play-services-ads:22.1.0")
-}
-kapt {
-    correctErrorTypes = true
 }

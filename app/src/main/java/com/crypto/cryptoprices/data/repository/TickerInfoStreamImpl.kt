@@ -6,26 +6,17 @@ import com.crypto.cryptoprices.domain.model.Ticker
 import com.crypto.cryptoprices.domain.model.WebResponse
 import com.crypto.cryptoprices.domain.repository.TickerInfoStream
 import com.crypto.cryptoprices.getTickerFromJson
-import com.squareup.moshi.Moshi
-import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import io.ktor.client.HttpClient
-import io.ktor.client.engine.cio.CIO
 import io.ktor.client.plugins.websocket.DefaultClientWebSocketSession
-import io.ktor.client.plugins.websocket.WebSockets
 import io.ktor.client.plugins.websocket.webSocket
 import io.ktor.websocket.Frame
 import io.ktor.websocket.close
 import io.ktor.websocket.readText
-import kotlinx.coroutines.channels.ProducerScope
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
-import okhttp3.Request
-import okhttp3.Response
-import okhttp3.WebSocketListener
-import okio.ByteString
 
 class TickerInfoStreamImpl(private val client: HttpClient) : TickerInfoStream {
     override fun getTickerInfo(streams: List<String>): Flow<WebResponse<Ticker>> = callbackFlow {
@@ -47,8 +38,9 @@ class TickerInfoStreamImpl(private val client: HttpClient) : TickerInfoStream {
 
                     while (client != null) {
                         val message = incoming.receive() as? Frame.Text
+                        message?.let { Log.i("message at repo", message.readText()) }
                         val ticker = message?.readText()?.getTickerFromJson()
-                        //ticker?.let { Log.i("socket", it.toString()) }
+                        ticker?.let { Log.i("ticker at repo", it.toString()) }
                         ticker?.let {
                             trySend(WebResponse.Success(it))
                         }
