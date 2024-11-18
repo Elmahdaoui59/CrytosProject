@@ -1,6 +1,5 @@
 package com.crypto.cryptoprices.data.repository
 
-import android.util.Log
 import com.crypto.cryptoprices.BuildConfig
 import com.crypto.cryptoprices.domain.model.Ticker
 import com.crypto.cryptoprices.domain.model.WebResponse
@@ -32,22 +31,18 @@ class TickerInfoStreamImpl(private val client: HttpClient) : TickerInfoStream {
                 }
                 if (url.last() == '/')
                     url = url.dropLast(1)
-                Log.i("url", url)
                 client.webSocket(url) {
                     session = this
 
                     while (client != null) {
                         val message = incoming.receive() as? Frame.Text
-                        message?.let { Log.i("message at repo", message.readText()) }
                         val ticker = message?.readText()?.getTickerFromJson()
-                        ticker?.let { Log.i("ticker at repo", it.toString()) }
                         ticker?.let {
                             trySend(WebResponse.Success(it))
                         }
                     }
                 }
             } catch (t: Throwable) {
-                Log.i("steam connection", t.message.toString())
                 trySend(WebResponse.Failure("Unable to establish connection\n Verify your internet and try again."))
             }
         }

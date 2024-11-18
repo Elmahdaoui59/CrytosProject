@@ -1,7 +1,6 @@
 package com.crypto.cryptoprices.presentation.currencies.components
 
 import android.content.Context
-import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -48,7 +47,6 @@ fun MainScreen(
             it.trim().equals(symbol.trim(), ignoreCase = true)
         }
         oldSet?.let {
-            Log.i("newList", symbol + it.toString())
             sharedPrefs.edit {
                 clear()
                 putStringSet(Constants.SELECTED_CURRENCIES_LIST, it.toSet())

@@ -4,7 +4,6 @@ import android.appwidget.AppWidgetManager
 import android.content.ComponentName
 import android.content.Context
 import android.content.SharedPreferences
-import android.util.Log
 import android.widget.RemoteViews
 import android.widget.RemoteViewsService
 import android.widget.Toast
@@ -82,7 +81,6 @@ class ListRemoteViewsFactory(
                     is WebResponse.Success -> {
                         symbol = result.data.data?.s.toString()
                         price = result.data.data?.c.toString().formatPrice()
-                        Log.i("widget stream", "symbol: $symbol, price: $price")
                         appWidgetManager.notifyAppWidgetViewDataChanged(widgetIds, R.id.list_view)
                     }
 
