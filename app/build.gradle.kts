@@ -41,7 +41,7 @@ android {
         create("release") {
             keyAlias = "..."
             keyPassword = "...."
-            storeFile = file("../keystore/cryptopricekey0.jks")
+            storeFile = file("../keystore/.....jks")
             storePassword = "..."
         }
     }
