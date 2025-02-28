@@ -24,7 +24,6 @@ class ListWidgetProvider : AppWidgetProvider() {
                 AppWidgetManager.INVALID_APPWIDGET_ID
             )
             val viewIndex: Int = intent.getIntExtra(EXTRA_ITEM, 0)
-            Toast.makeText(context, "Touched view $viewIndex", Toast.LENGTH_SHORT).show()
         }
         super.onReceive(context, intent)
     }

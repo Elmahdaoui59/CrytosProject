@@ -75,7 +75,7 @@ class ListRemoteViewsFactory(
                     }
 
                     is WebResponse.Failure -> {
-                        Toast.makeText(context, result.message, Toast.LENGTH_LONG).show()
+                        //Toast.makeText(context, result.message, Toast.LENGTH_LONG).show()
                     }
 
                     is WebResponse.Success -> {
