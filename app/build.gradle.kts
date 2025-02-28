@@ -39,10 +39,10 @@ android {
 
     signingConfigs {
         create("release") {
-            keyAlias = "key0"
-            keyPassword = "cryptodev"
-            storeFile = file("../keystore/cryptopricekey0.jks")
-            storePassword = "cryptodev"
+            keyAlias = "..."
+            keyPassword = "...."
+            storeFile = file("../keystore/.....jks")
+            storePassword = "..."
         }
     }
     buildTypes {
